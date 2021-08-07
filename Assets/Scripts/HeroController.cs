@@ -5,15 +5,22 @@ using UnityEngine;
 public class HeroController : MonoBehaviour
 {
     public enum Direction { Up, UpLeft, Left, DownLeft, Down, DownRight, Right, UpRight }
+    public enum WeaponSelectionOptions { Sword, Bow, Bomb }
     public bool CanMove;
     public float Speed;
     public Animator MySprite;
     public Direction Facing;
+    public float SwordDamage, ArrowDamage, BombDamage;
+
+    public float ReloadTime;
+    [HideInInspector]     public WeaponSelectionOptions selectedWeapon;
+    public GameObject SwordBox, ArrowBox, BombBox;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        selectedWeapon = WeaponSelectionOptions.Sword;
+        StartCoroutine(ReloadWeapon());
     }
 
     // Update is called once per frame
@@ -81,6 +88,35 @@ public class HeroController : MonoBehaviour
             {
                 MySprite.SetBool("Walking", false);
             }
+            if (Input.GetKeyUp(KeyCode.LeftAlt)) //Weapon Switch button
+            {
+                bool done = false;
+                if (!done && selectedWeapon == WeaponSelectionOptions.Sword) { done = true; selectedWeapon = WeaponSelectionOptions.Bow; }
+                if (!done && selectedWeapon == WeaponSelectionOptions.Bow) { done = true; selectedWeapon = WeaponSelectionOptions.Bomb; }
+                if (!done && selectedWeapon == WeaponSelectionOptions.Bomb) { done = true; selectedWeapon = WeaponSelectionOptions.Sword; }
+                //play sound
+                StartCoroutine(ReloadWeapon());
+            }
+            if (Input.GetKeyUp(KeyCode.LeftControl) && selectedWeapon == WeaponSelectionOptions.Bow) //fire bow
+            {
+                int _i = 0;
+                for (int _a = 0; _a < GameManager.GAME.ArrowPool.Count; _a++) if (!GameManager.GAME.ArrowPool[_a].GetComponent<Arrow_Controller>().flight) _i = _a;
+                GameManager.GAME.ArrowPool[_i].transform.position = this.transform.position;
+                GameManager.GAME.ArrowPool[_i].transform.rotation = this.transform.rotation;
+                GameManager.GAME.ArrowPool[_i].GetComponent<Arrow_Controller>().FireArrow();
+            }
         }
+    }
+
+    IEnumerator ReloadWeapon()
+    {
+        this.SwordBox.SetActive(false);
+        this.ArrowBox.SetActive(false);
+        this.BombBox.SetActive(false);
+        yield return new WaitForSeconds(ReloadTime);
+
+        if (selectedWeapon == WeaponSelectionOptions.Sword) this.SwordBox.SetActive(true);
+        if (selectedWeapon == WeaponSelectionOptions.Bow) this.ArrowBox.SetActive(true);
+        if (selectedWeapon == WeaponSelectionOptions.Bomb) this.BombBox.SetActive(true);
     }
 }
