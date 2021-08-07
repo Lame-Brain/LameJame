@@ -78,5 +78,15 @@ public class Enemy_Logic_Controller : MonoBehaviour
             Health = Health - GameManager.GAME.ArrowDamage;
             collision.gameObject.GetComponent<Arrow_Controller>().StopArrow();
         }
+        if (collision.collider.gameObject.tag == "Explosion" && InvincibleCountdown == 0)
+        {
+            Debug.Log("HIT");
+            InvincibleCountdown = InvincibleTime;
+            Vector3 dir = collision.collider.transform.position - transform.position;
+            dir = -dir.normalized;
+            GetComponent<Rigidbody2D>().AddForce(dir * 50, ForceMode2D.Impulse);
+            Health = Health - GameManager.GAME.ArrowDamage;
+            collision.gameObject.GetComponent<Arrow_Controller>().StopArrow();
+        }
     }
 }

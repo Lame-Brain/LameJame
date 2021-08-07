@@ -109,10 +109,11 @@ public class HeroController : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.LeftControl) && selectedWeapon == WeaponSelectionOptions.Bomb && BombBox.activeSelf) //fire bomb
             {
                 int _i = 0;
-                for (int _a = 0; _a < GameManager.GAME.BombPool.Count; _a++) if (!GameManager.GAME.BombPool[_a].GetComponent<Bomb_Controller>().armed) _i = _a;
+                for (int _a = 0; _a < GameManager.GAME.BombPool.Count; _a++) //Debug.Log(_a + ". bomb is armed? " + GameManager.GAME.BombPool[_a].GetComponent<Bomb_Controller>().armed);
+                    if (!GameManager.GAME.BombPool[_a].GetComponent<Bomb_Controller>().armed) _i = _a;
                 GameManager.GAME.BombPool[_i].transform.position = this.transform.position;
                 GameManager.GAME.BombPool[_i].transform.rotation = this.transform.rotation;
-                //GameManager.GAME.BombPool[_i].transform.Translate(Vector2.down * .8f); 
+                GameManager.GAME.BombPool[_i].transform.Translate(Vector2.down * .8f); 
                 GameManager.GAME.BombPool[_i].GetComponent<Bomb_Controller>().Arm_Bomb();
                 StartCoroutine(ReloadWeapon());
             }
