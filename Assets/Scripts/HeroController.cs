@@ -97,13 +97,24 @@ public class HeroController : MonoBehaviour
                 //play sound
                 StartCoroutine(ReloadWeapon());
             }
-            if (Input.GetKeyUp(KeyCode.LeftControl) && selectedWeapon == WeaponSelectionOptions.Bow) //fire bow
+            if (Input.GetKeyUp(KeyCode.LeftControl) && selectedWeapon == WeaponSelectionOptions.Bow && ArrowBox.activeSelf) //fire bow
             {
                 int _i = 0;
                 for (int _a = 0; _a < GameManager.GAME.ArrowPool.Count; _a++) if (!GameManager.GAME.ArrowPool[_a].GetComponent<Arrow_Controller>().flight) _i = _a;
                 GameManager.GAME.ArrowPool[_i].transform.position = this.transform.position;
                 GameManager.GAME.ArrowPool[_i].transform.rotation = this.transform.rotation;
                 GameManager.GAME.ArrowPool[_i].GetComponent<Arrow_Controller>().FireArrow();
+                StartCoroutine(ReloadWeapon());
+            }
+            if (Input.GetKeyUp(KeyCode.LeftControl) && selectedWeapon == WeaponSelectionOptions.Bomb && BombBox.activeSelf) //fire bomb
+            {
+                int _i = 0;
+                for (int _a = 0; _a < GameManager.GAME.BombPool.Count; _a++) if (!GameManager.GAME.BombPool[_a].GetComponent<Bomb_Controller>().armed) _i = _a;
+                GameManager.GAME.BombPool[_i].transform.position = this.transform.position;
+                GameManager.GAME.BombPool[_i].transform.rotation = this.transform.rotation;
+                //GameManager.GAME.BombPool[_i].transform.Translate(Vector2.down * .8f); 
+                GameManager.GAME.BombPool[_i].GetComponent<Bomb_Controller>().Arm_Bomb();
+                StartCoroutine(ReloadWeapon());
             }
         }
     }

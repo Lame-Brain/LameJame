@@ -65,8 +65,18 @@ public class Enemy_Logic_Controller : MonoBehaviour
             InvincibleCountdown = InvincibleTime;
             Vector3 dir = collision.collider.transform.position - transform.position;
             dir = -dir.normalized;
-            GetComponent<Rigidbody2D>().AddForce(dir * 50, ForceMode2D.Impulse);
+            GetComponent<Rigidbody2D>().AddForce(dir * 150, ForceMode2D.Impulse);
             Health = Health - GameManager.GAME.SwordDamage;
+        }
+        if (collision.collider.gameObject.tag == "Arrow" && InvincibleCountdown == 0)
+        {
+            Debug.Log("HIT");
+            InvincibleCountdown = InvincibleTime;
+            Vector3 dir = collision.collider.transform.position - transform.position;
+            dir = -dir.normalized;
+            GetComponent<Rigidbody2D>().AddForce(dir * 50, ForceMode2D.Impulse);
+            Health = Health - GameManager.GAME.ArrowDamage;
+            collision.gameObject.GetComponent<Arrow_Controller>().StopArrow();
         }
     }
 }

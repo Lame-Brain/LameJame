@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager GAME;
+    public static GameObject POOL;
 
     public float SwordDamage, ArrowDamage, BombDamage;
     public GameObject arrow_prefab, bomb_prefab, rock_prefab;
@@ -18,14 +19,16 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         GAME = this;
+        POOL = GameObject.FindGameObjectWithTag("ItemPool");
         for(int _i = 0; _i < 50; _i++)
         {
-            _go_arw = Instantiate(arrow_prefab);
-            _go_bmb = Instantiate(bomb_prefab);
-            _go_rck = Instantiate(rock_prefab);
+            _go_arw = Instantiate(arrow_prefab, POOL.transform.position, Quaternion.identity);
+            _go_bmb = Instantiate(bomb_prefab, POOL.transform.position, Quaternion.identity);
+            _go_rck = Instantiate(rock_prefab, POOL.transform.position, Quaternion.identity);
             ArrowPool.Add(_go_arw);
             BombPool.Add(_go_bmb);
             RockPool.Add(_go_rck);
+            
         }
     }
 
