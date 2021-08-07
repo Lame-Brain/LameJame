@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Enemy_Logic_Controller : MonoBehaviour
 {
+    public enum MonsterType { Soldier, Archer, Charger}
+    public MonsterType Type;
+    public bool canMove;
     public float InvincibleTime;
     public Animator MySprite;
     public float Health;
@@ -15,13 +18,14 @@ public class Enemy_Logic_Controller : MonoBehaviour
 
     float InvincibleCountdown = 0;
     float RateOfCountdownDecay = .1f;
-
+    bool inRange;
+    Transform _Target;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        _Target = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     void Update()
@@ -56,11 +60,18 @@ public class Enemy_Logic_Controller : MonoBehaviour
             Destroy(MySprite.gameObject);
             Destroy(this.gameObject);
         }
+
+        if (canMove)
+        {
+            transform.up = _Target.position - transform.position; //face player with y axis
+            transform.Translate(Vector2.up * Speed * Time.deltaTime);
+            //gameObject.GetComponent<Rigidbody2D>().MovePosition(new Vector2(transform.position.x, transform.position.y + Speed * Time.deltaTime));
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.name == "Sword" && InvincibleCountdown == 0)
+        if (collision.collider.gameObject.name == "Sword" && InvincibleCountdown == 0) //Hit by Sword
         {
             InvincibleCountdown = InvincibleTime;
             Vector3 dir = collision.collider.transform.position - transform.position;
@@ -68,9 +79,8 @@ public class Enemy_Logic_Controller : MonoBehaviour
             GetComponent<Rigidbody2D>().AddForce(dir * 150, ForceMode2D.Impulse);
             Health = Health - GameManager.GAME.SwordDamage;
         }
-        if (collision.collider.gameObject.tag == "Arrow" && InvincibleCountdown == 0)
+        if (collision.collider.gameObject.tag == "Arrow" && InvincibleCountdown == 0) //hit by Arrow
         {
-            Debug.Log("HIT");
             InvincibleCountdown = InvincibleTime;
             Vector3 dir = collision.collider.transform.position - transform.position;
             dir = -dir.normalized;
@@ -78,15 +88,17 @@ public class Enemy_Logic_Controller : MonoBehaviour
             Health = Health - GameManager.GAME.ArrowDamage;
             collision.gameObject.GetComponent<Arrow_Controller>().StopArrow();
         }
-        if (collision.collider.gameObject.tag == "Explosion" && InvincibleCountdown == 0)
+        if (collision.collider.gameObject.tag == "Explosion" && InvincibleCountdown == 0) //hit by bomb
         {
-            Debug.Log("HIT");
             InvincibleCountdown = InvincibleTime;
             Vector3 dir = collision.collider.transform.position - transform.position;
             dir = -dir.normalized;
-            GetComponent<Rigidbody2D>().AddForce(dir * 50, ForceMode2D.Impulse);
+            GetComponent<Rigidbody2D>().AddForce(dir * 300, ForceMode2D.Impulse);
             Health = Health - GameManager.GAME.ArrowDamage;
-            collision.gameObject.GetComponent<Arrow_Controller>().StopArrow();
+            //collision.gameObject.GetComponent<Arrow_Controller>().StopArrow();
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision) { inRange = true; }
+    private void OnTriggerExit2D(Collider2D collision) { inRange = false; }
 }

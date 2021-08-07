@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 1952196160459229857}
   - component: {fileID: 1952196160459229886}
   - component: {fileID: 1952196160459229856}
-  m_Layer: 0
+  - component: {fileID: 325916077698694281}
+  m_Layer: 10
   m_Name: Boom
   m_TagString: Explosion
   m_Icon: {fileID: 0}
@@ -102,3 +103,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!58 &325916077698694281
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1952196160459229887}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.03999424, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.0687089

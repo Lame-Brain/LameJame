@@ -8,6 +8,7 @@ TagManager:
   - Arrow
   - Explosion
   - ItemPool
+  - Range
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Sword
   - Arrow
   - Hero
-  - 
+  - Explosion
   - 
   - 
   - 
