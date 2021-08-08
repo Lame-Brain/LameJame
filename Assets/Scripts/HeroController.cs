@@ -7,12 +7,13 @@ public class HeroController : MonoBehaviour
     public enum Direction { Up, UpLeft, Left, DownLeft, Down, DownRight, Right, UpRight }
     public enum WeaponSelectionOptions { Sword, Bow, Bomb }
     public bool CanMove;
-    public float Health, Armor;
     public float Speed;
     public Animator MySprite;
     public Direction Facing;
     public float SwordDamage, ArrowDamage, BombDamage;
     public float InvincibleTime;
+
+    public AudioSource SFX, SlashSFX, PlopSFX, ThwipSFX, ClickSFX, OuchSFX, TinkSFX;
 
     public float ReloadTime;
     [HideInInspector]     public WeaponSelectionOptions selectedWeapon;
@@ -26,7 +27,7 @@ public class HeroController : MonoBehaviour
     void Start()
     {
         selectedWeapon = WeaponSelectionOptions.Sword;
-        StartCoroutine(ReloadWeapon());
+        //StartCoroutine(ReloadWeapon());
     }
 
     // Update is called once per frame
@@ -40,9 +41,9 @@ public class HeroController : MonoBehaviour
             if (InvincibleCountdown <= 0) { MySprite.SetBool("Flash", false); InvincibleCountdown = 0; }
         }
 
-        if (InvincibleCountdown == 0 && Health <= 0)
+        if (InvincibleCountdown == 0 && GameManager.GAME.Health <= 0)
         {
-            //GAME OVER
+            UnityEngine.SceneManagement.SceneManager.LoadScene(2);
         }
 
             if (CanMove)
@@ -110,13 +111,13 @@ public class HeroController : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.LeftAlt)) //Weapon Switch button
             {
                 bool done = false;
-                if (!done && selectedWeapon == WeaponSelectionOptions.Sword) { done = true; selectedWeapon = WeaponSelectionOptions.Bow; }
-                if (!done && selectedWeapon == WeaponSelectionOptions.Bow) { done = true; selectedWeapon = WeaponSelectionOptions.Bomb; }
-                if (!done && selectedWeapon == WeaponSelectionOptions.Bomb) { done = true; selectedWeapon = WeaponSelectionOptions.Sword; }
+                if (!done && selectedWeapon == WeaponSelectionOptions.Sword) { done = true; selectedWeapon = WeaponSelectionOptions.Bow; SFX.PlayOneShot(ClickSFX.clip); }
+                if (!done && selectedWeapon == WeaponSelectionOptions.Bow) { done = true; selectedWeapon = WeaponSelectionOptions.Bomb; SFX.PlayOneShot(ClickSFX.clip); }
+                if (!done && selectedWeapon == WeaponSelectionOptions.Bomb) { done = true; selectedWeapon = WeaponSelectionOptions.Sword; SFX.PlayOneShot(SlashSFX.clip); }
                 //play sound
                 StartCoroutine(ReloadWeapon());
             }
-            if (Input.GetKeyUp(KeyCode.LeftControl) && selectedWeapon == WeaponSelectionOptions.Bow && ArrowBox.activeSelf) //fire bow
+            if (Input.GetKeyUp(KeyCode.LeftControl) && selectedWeapon == WeaponSelectionOptions.Bow && ArrowBox.activeSelf && GameManager.GAME.Arrows > 0) //fire bow
             {
                 int _i = 0;
                 for (int _a = 0; _a < GameManager.GAME.ArrowPool.Count; _a++) if (!GameManager.GAME.ArrowPool[_a].GetComponent<Arrow_Controller>().flight) _i = _a;
@@ -124,8 +125,10 @@ public class HeroController : MonoBehaviour
                 GameManager.GAME.ArrowPool[_i].transform.rotation = this.transform.rotation;
                 GameManager.GAME.ArrowPool[_i].GetComponent<Arrow_Controller>().FireArrow();
                 StartCoroutine(ReloadWeapon());
+                GameManager.GAME.Arrows -= 1;
+                SFX.PlayOneShot(ThwipSFX.clip);
             }
-            if (Input.GetKeyUp(KeyCode.LeftControl) && selectedWeapon == WeaponSelectionOptions.Bomb && BombBox.activeSelf) //fire bomb
+            if (Input.GetKeyUp(KeyCode.LeftControl) && selectedWeapon == WeaponSelectionOptions.Bomb && BombBox.activeSelf && GameManager.GAME.Bombs > 0) //fire bomb
             {
                 int _i = 0;
                 for (int _a = 0; _a < GameManager.GAME.BombPool.Count; _a++) //Debug.Log(_a + ". bomb is armed? " + GameManager.GAME.BombPool[_a].GetComponent<Bomb_Controller>().armed);
@@ -135,6 +138,8 @@ public class HeroController : MonoBehaviour
                 GameManager.GAME.BombPool[_i].transform.Translate(Vector2.down * .8f); 
                 GameManager.GAME.BombPool[_i].GetComponent<Bomb_Controller>().Arm_Bomb();
                 StartCoroutine(ReloadWeapon());
+                GameManager.GAME.Bombs -= 1;
+                SFX.PlayOneShot(PlopSFX.clip);
             }
         }
     }
@@ -154,7 +159,7 @@ public class HeroController : MonoBehaviour
     {
         if (collision.collider.gameObject.tag == "Rock")
         {
-            if (InvincibleCountdown == 0) Health = Health - GameManager.GAME.RockDamge;
+            if (InvincibleCountdown == 0) DamageHealth(GameManager.GAME.RockDamge);
             collision.collider.gameObject.GetComponent<I_am_a_Rock>().flight = false;
             collision.collider.gameObject.GetComponent<I_am_a_Rock>().Stop_Rock();
             InvincibleCountdown = InvincibleTime;
@@ -164,7 +169,7 @@ public class HeroController : MonoBehaviour
         }
         if(collision.collider.gameObject.tag == "Enemy")
         {
-            if (InvincibleCountdown == 0) Health = Health - 2;
+            if (InvincibleCountdown == 0) DamageHealth(collision.collider.gameObject.GetComponent<Enemy_Logic_Controller>().Damage);
             InvincibleCountdown = InvincibleTime;
             Vector3 dir = collision.collider.transform.position - transform.position;
             dir = -dir.normalized;
@@ -172,7 +177,7 @@ public class HeroController : MonoBehaviour
         }
         if(collision.collider.gameObject.tag == "Medium Enemy")
         {
-            if (InvincibleCountdown == 0) Health = Health - 4;
+            if (InvincibleCountdown == 0) DamageHealth(collision.collider.gameObject.GetComponent<Enemy_Logic_Controller>().Damage);
             InvincibleCountdown = InvincibleTime;
             Vector3 dir = collision.collider.transform.position - transform.position;
             dir = -dir.normalized;
@@ -180,11 +185,40 @@ public class HeroController : MonoBehaviour
         }
         if(collision.collider.gameObject.tag == "Heavy Enemy")
         {
-            if (InvincibleCountdown == 0) Health = Health - 8;
+            if (InvincibleCountdown == 0) DamageHealth(collision.collider.gameObject.GetComponent<Enemy_Logic_Controller>().Damage);
             InvincibleCountdown = InvincibleTime;
             Vector3 dir = collision.collider.transform.position - transform.position;
             dir = -dir.normalized;
             GetComponent<Rigidbody2D>().AddForce(dir * 1000, ForceMode2D.Impulse);
         }
+        if (collision.collider.gameObject.tag == "Explosion")
+        {
+            if (InvincibleCountdown == 0) DamageHealth(GameManager.GAME.BombDamage);
+            InvincibleCountdown = InvincibleTime;
+            Vector3 dir = collision.collider.transform.position - transform.position;
+            dir = -dir.normalized;
+            GetComponent<Rigidbody2D>().AddForce(dir * 3000, ForceMode2D.Impulse);
+        }
+
+    }
+
+    public void DamageHealth(float damage)
+    {
+        float _armor = GameManager.GAME.Armor;
+        if (GameManager.GAME.Armor > 0)
+        {
+            //Play Armor tink sound
+            SFX.PlayOneShot(TinkSFX.clip);
+            GameManager.GAME.Armor -= damage;
+            if (GameManager.GAME.Armor < 0) GameManager.GAME.Armor = 0;
+            damage = damage - _armor;
+            if (damage < 0) damage = 0;
+        }
+        else
+        {
+            //Play Hurt sound
+            SFX.PlayOneShot(OuchSFX.clip);
+        }
+        GameManager.GAME.Health = GameManager.GAME.Health - damage;
     }
 }

@@ -13,6 +13,8 @@ TagManager:
   - Enemy
   - Medium Enemy
   - Heavy Enemy
+  - Sprite
+  - PowerUp
   layers:
   - Default
   - TransparentFX

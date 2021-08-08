@@ -12,6 +12,7 @@ public class Enemy_Logic_Controller : MonoBehaviour
     public float Health;
     public float Speed;
     public float Damage;
+    public int Points;
     public GameObject Grave_Prefab, Pop_Prefab;
 
     public int min_hearts, max_hearts, min_shields, max_shields, min_coins, max_coins, min_bags, max_bags, min_points, max_points, min_Arrows, max_Arrows, min_Bombs, max_Bombs;
@@ -21,6 +22,8 @@ public class Enemy_Logic_Controller : MonoBehaviour
     bool inRange;
     bool targeting, charging, winding;
     Transform _Target, _storedTarget;
+
+    public AudioSource SFX, MonsterSound, MonsterScream;
 
 
     // Start is called before the first frame update
@@ -60,6 +63,11 @@ public class Enemy_Logic_Controller : MonoBehaviour
             _go.GetComponent<Grave_Content>().num_Bombs = _bmbs;
             Destroy(MySprite.gameObject);
             Destroy(this.gameObject);
+            GameManager.GAME.Points += Points;
+            GameManager.GAME.Coins += 10;
+            //Play Monster death sound
+            if (!SFX.isPlaying) SFX.PlayOneShot(MonsterScream.clip);
+
         }
 
         if (canMove) //MOVEMENT
@@ -109,7 +117,7 @@ public class Enemy_Logic_Controller : MonoBehaviour
     IEnumerator Charge()
     {
         transform.Translate(Vector2.up * (Speed * 2.5f) * Time.deltaTime); //move along y axis at double speed
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         charging = false;
     }
     IEnumerator DelayBeforeThrowingAnotherRock()
@@ -127,6 +135,8 @@ public class Enemy_Logic_Controller : MonoBehaviour
             dir = -dir.normalized;
             GetComponent<Rigidbody2D>().AddForce(dir * 150, ForceMode2D.Impulse);
             Health = Health - GameManager.GAME.SwordDamage;
+            //Play Monster hit sound
+            if (!SFX.isPlaying) SFX.PlayOneShot(MonsterScream.clip);
         }
         if (collision.collider.gameObject.tag == "Arrow" && InvincibleCountdown == 0) //hit by Arrow
         {
@@ -136,6 +146,8 @@ public class Enemy_Logic_Controller : MonoBehaviour
             GetComponent<Rigidbody2D>().AddForce(dir * 50, ForceMode2D.Impulse);
             Health = Health - GameManager.GAME.ArrowDamage;
             collision.gameObject.GetComponent<Arrow_Controller>().StopArrow();
+            //Play Monster hit sound
+            if (!SFX.isPlaying) SFX.PlayOneShot(MonsterScream.clip);
         }
         if (collision.collider.gameObject.tag == "Explosion" && InvincibleCountdown == 0) //hit by bomb
         {
@@ -143,7 +155,9 @@ public class Enemy_Logic_Controller : MonoBehaviour
             Vector3 dir = collision.collider.transform.position - transform.position;
             dir = -dir.normalized;
             GetComponent<Rigidbody2D>().AddForce(dir * 300, ForceMode2D.Impulse);
-            Health = Health - GameManager.GAME.ArrowDamage;
+            Health = Health - GameManager.GAME.BombDamage;
+            //Play Monster hit sound
+            if (!SFX.isPlaying) SFX.PlayOneShot(MonsterScream.clip);
         }
     }
 
@@ -152,6 +166,8 @@ public class Enemy_Logic_Controller : MonoBehaviour
         if (collision.GetComponent<Collider2D>().gameObject.name == "Range")
         {
             inRange = true;
+            //Play Monster Sound
+            if (!SFX.isPlaying) SFX.PlayOneShot(MonsterSound.clip);
         }
     }
     private void OnTriggerExit2D(Collider2D collision) 
@@ -159,6 +175,8 @@ public class Enemy_Logic_Controller : MonoBehaviour
         if (collision.GetComponent<Collider2D>().gameObject.name == "Range")
         {
             inRange = false; targeting = false; charging = false;
+            //Play Monster Sound
+            if (!SFX.isPlaying) SFX.PlayOneShot(MonsterSound.clip);
         }
     }
 }
