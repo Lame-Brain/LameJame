@@ -19,7 +19,8 @@ public class Enemy_Logic_Controller : MonoBehaviour
     float InvincibleCountdown = 0;
     float RateOfCountdownDecay = .1f;
     bool inRange;
-    Transform _Target;
+    bool targeting, charging;
+    Transform _Target, _storedTarget;
 
 
     // Start is called before the first frame update
@@ -61,12 +62,54 @@ public class Enemy_Logic_Controller : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        if (canMove)
+        if (canMove) //MOVEMENT
         {
-            transform.up = _Target.position - transform.position; //face player with y axis
-            transform.Translate(Vector2.up * Speed * Time.deltaTime);
-            //gameObject.GetComponent<Rigidbody2D>().MovePosition(new Vector2(transform.position.x, transform.position.y + Speed * Time.deltaTime));
+            if (!inRange || Type == MonsterType.Soldier) //Soldiers or Enemies out of range
+            {
+                transform.up = _Target.position - transform.position; //face player with y axis
+                transform.Translate(Vector2.up * Speed * Time.deltaTime); //move along y axis              
+            }
+            if(inRange && Type == MonsterType.Charger && !charging && !targeting) //Chargers stop at range and pause before charging
+            {
+                transform.up = _Target.position - transform.position; //face player with y axis
+                targeting = true;
+                StartCoroutine(PauseBeforeCharging());
+            }
+            if(inRange && Type == MonsterType.Charger && charging) //...Then they charge!
+            {
+                StartCoroutine(Charge());
+            }
+            if(inRange && Type == MonsterType.Archer && !targeting) //Archer fires his shot, using targeting to space shots out.
+            {
+                targeting = true;
+                transform.up = _Target.position - transform.position; //face player with y axis
+                int _i = 0;
+                for (int _a = 0; _a < GameManager.GAME.RockPool.Count; _a++) if (!GameManager.GAME.RockPool[_a].GetComponent<I_am_a_Rock>().flight) _i = _a;
+                GameManager.GAME.RockPool[_i].transform.position = this.transform.position;
+                GameManager.GAME.RockPool[_i].transform.rotation = this.transform.rotation;
+                GameManager.GAME.RockPool[_i].GetComponent<I_am_a_Rock>().Throw_Rock();
+                StartCoroutine(DelayBeforeThrowingAnotherRock());
+                transform.Translate(Vector2.down * Speed * 2 *Time.deltaTime); //move backwards along y axis   
+            }
         }
+    }
+    IEnumerator PauseBeforeCharging()
+    {
+        yield return new WaitForSeconds(1f);
+        charging = true;
+        targeting = false;
+        _storedTarget = _Target;
+    }
+    IEnumerator Charge()
+    {
+        transform.Translate(Vector2.up * (Speed * 2.5f) * Time.deltaTime); //move along y axis at double speed
+        yield return new WaitForSeconds(1f);
+        charging = false;
+    }
+    IEnumerator DelayBeforeThrowingAnotherRock()
+    {
+        yield return new WaitForSeconds(1f);
+        targeting = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -100,5 +143,5 @@ public class Enemy_Logic_Controller : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D collision) { inRange = true; }
-    private void OnTriggerExit2D(Collider2D collision) { inRange = false; }
+    private void OnTriggerExit2D(Collider2D collision) { inRange = false; targeting = false; charging = false; }
 }
