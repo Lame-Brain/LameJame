@@ -162,5 +162,29 @@ public class HeroController : MonoBehaviour
             GetComponent<Rigidbody2D>().AddForce(dir * 100, ForceMode2D.Impulse);
             Health = Health - GameManager.GAME.RockDamge;
         }
+        if(collision.collider.gameObject.tag == "Enemy")
+        {
+            InvincibleCountdown = InvincibleTime;
+            Vector3 dir = collision.collider.transform.position - transform.position;
+            dir = -dir.normalized;
+            GetComponent<Rigidbody2D>().AddForce(dir * 100, ForceMode2D.Impulse);
+            Health = Health - 5;
+        }
+        if(collision.collider.gameObject.tag == "Medium Enemy")
+        {
+            InvincibleCountdown = InvincibleTime;
+            Vector3 dir = collision.collider.transform.position - transform.position;
+            dir = -dir.normalized;
+            GetComponent<Rigidbody2D>().AddForce(dir * 100, ForceMode2D.Impulse);
+            Health = Health - 10;
+        }
+        if(collision.collider.gameObject.tag == "Heavy Enemy")
+        {
+            InvincibleCountdown = InvincibleTime;
+            Vector3 dir = collision.collider.transform.position - transform.position;
+            dir = -dir.normalized;
+            GetComponent<Rigidbody2D>().AddForce(dir * 100, ForceMode2D.Impulse);
+            Health = Health - 15;
+        }
     }
 }

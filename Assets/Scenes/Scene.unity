@@ -552,6 +552,10 @@ PrefabInstance:
       propertyPath: MySprite
       value: 
       objectReference: {fileID: 225868557}
+    - target: {fileID: 1473188045, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
+      propertyPath: InvincibleTime
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3945365533955435820, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
       propertyPath: m_RootOrder
       value: 2
