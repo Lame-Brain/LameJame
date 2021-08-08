@@ -144,13 +144,13 @@ public class HeroController : MonoBehaviour
             }
             if (Input.GetKeyUp(KeyCode.Escape))
             {
-                QuitMenuUp = true;
-                QuitGameScreen.SetActive(true);
-                GameManager.GAME_PAUSE = true;
-                //UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+                //QuitMenuUp = true;
+                //QuitGameScreen.SetActive(true);
+                //GameManager.GAME_PAUSE = true;
+                UnityEngine.SceneManagement.SceneManager.LoadScene(0);
             }
         }
-        if (QuitMenuUp && Input.GetKeyUp(KeyCode.Escape))
+        /*if (QuitMenuUp && Input.GetKeyUp(KeyCode.Escape))
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
         }
@@ -159,7 +159,7 @@ public class HeroController : MonoBehaviour
             QuitMenuUp = false;
             QuitGameScreen.SetActive(false);
             GameManager.GAME_PAUSE = false;
-        }
+        }*/
     }
 
     IEnumerator ReloadWeapon()

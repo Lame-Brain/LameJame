@@ -117,7 +117,7 @@ public class I_am_a_Store : MonoBehaviour
         }
         if(n == 5)
         {
-            if(GameManager.GAME.Coins > 999999)
+            if(GameManager.GAME.Coins > 99999)
             {
                 //Win Game
                 SFX.PlayOneShot(Yes_SFX.clip);

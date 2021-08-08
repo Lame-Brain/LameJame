@@ -81,6 +81,7 @@ public class GameManager : MonoBehaviour
                 SFX.PlayOneShot(Num10_SFX.clip);
                 StartCoroutine(CountDownTheCheatTimer());
                 //SPAWN ENEMIES
+                GameObject.FindGameObjectWithTag("Player").gameObject.transform.position = new Vector3(0, 0, 0);
                 int _spawnzone, _mon, _sel = 0; GameObject _obj, _sprt; float _x = 0, _y = 0; 
                 int _wave = Random.Range(_num_per_wave - _wave_variance, _num_per_wave + _wave_variance);
                 for (int _i = 0; _i < _wave; _i++)
