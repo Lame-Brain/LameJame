@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameObject POOL;
     public static int SECONDS_LEFT;
     public static string GAME_PHASE;
+    public static bool GAME_PAUSE;
 
     public float Health, Armor, Arrows, Bombs, Coins, Points;
     public float SwordDamage, ArrowDamage, BombDamage, RockDamge;
@@ -33,6 +34,7 @@ public class GameManager : MonoBehaviour
     {
         GAME = this;
         POOL = GameObject.FindGameObjectWithTag("ItemPool");
+        GAME_PAUSE = false;
         for(int _i = 0; _i < 50; _i++)
         {
             _go_arw = Instantiate(arrow_prefab, POOL.transform.position, Quaternion.identity);
@@ -120,6 +122,7 @@ public class GameManager : MonoBehaviour
         if (GAME_PHASE == "Get Loot" && !CountingDown)
         {
             if (!SFX.isPlaying) SFX.PlayOneShot(GatherLoot_SFX.clip);
+
             //Clean up last wave
             foreach (GameObject _sprites in GameObject.FindGameObjectsWithTag("Sprite")) Destroy(_sprites);
             foreach (GameObject _enemy in GameObject.FindGameObjectsWithTag("Enemy")) Destroy(_enemy);
@@ -199,6 +202,7 @@ public class GameManager : MonoBehaviour
         if (GAME_PHASE == "Buy Stuff" && !CountingDown)
         {
             if (!SFX.isPlaying) SFX.PlayOneShot(BuyStuff_SFX.clip);
+
             //Clean up loot
             foreach (GameObject _go in GameObject.FindGameObjectsWithTag("PowerUp")) Destroy(_go);
 
@@ -240,11 +244,14 @@ public class GameManager : MonoBehaviour
             CountingDown = false;
             StorePanel.SetActive(false);
             MessagePanel.SetActive(false);
+            GAME_PAUSE = false;
         }
     }
 
     IEnumerator CountDownTheTimer()
     {
+        //GAME_PAUSE = true;
+
         yield return new WaitForSeconds(1f);
         SECONDS_LEFT = SECONDS_LEFT - 1;
         Countdown();
@@ -252,6 +259,8 @@ public class GameManager : MonoBehaviour
 
     IEnumerator CountDownTheCheatTimer()
     {
+        //GAME_PAUSE = true;
+
         yield return new WaitForSeconds(1.5f);
         SECONDS_LEFT = SECONDS_LEFT - 1;
         Countdown();

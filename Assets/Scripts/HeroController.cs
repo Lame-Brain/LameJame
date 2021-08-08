@@ -17,11 +17,12 @@ public class HeroController : MonoBehaviour
 
     public float ReloadTime;
     [HideInInspector]     public WeaponSelectionOptions selectedWeapon;
-    public GameObject SwordBox, ArrowBox, BombBox;
+    public GameObject SwordBox, ArrowBox, BombBox, QuitGameScreen;
 
     public float InvincibleCountdown = 0;
     float RateOfCountdownDecay = .1f;
 
+    bool QuitMenuUp = false;
 
     // Start is called before the first frame update
     void Start()
@@ -46,8 +47,8 @@ public class HeroController : MonoBehaviour
             UnityEngine.SceneManagement.SceneManager.LoadScene(2);
         }
 
-            if (CanMove)
-        {
+        if (CanMove && !GameManager.GAME_PAUSE)
+            {
             if (Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
             {
                 transform.eulerAngles = new Vector3(0, 0, 0);
@@ -141,6 +142,23 @@ public class HeroController : MonoBehaviour
                 GameManager.GAME.Bombs -= 1;
                 SFX.PlayOneShot(PlopSFX.clip);
             }
+            if (Input.GetKeyUp(KeyCode.Escape))
+            {
+                QuitMenuUp = true;
+                QuitGameScreen.SetActive(true);
+                GameManager.GAME_PAUSE = true;
+                //UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+            }
+        }
+        if (QuitMenuUp && Input.GetKeyUp(KeyCode.Escape))
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        }
+        else if (QuitMenuUp && Input.anyKeyDown)
+        {
+            QuitMenuUp = false;
+            QuitGameScreen.SetActive(false);
+            GameManager.GAME_PAUSE = false;
         }
     }
 
