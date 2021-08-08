@@ -19,7 +19,7 @@ public class Enemy_Logic_Controller : MonoBehaviour
     float InvincibleCountdown = 0;
     float RateOfCountdownDecay = .1f;
     bool inRange;
-    bool targeting, charging;
+    bool targeting, charging, winding;
     Transform _Target, _storedTarget;
 
 
@@ -79,17 +79,23 @@ public class Enemy_Logic_Controller : MonoBehaviour
             {
                 StartCoroutine(Charge());
             }
-            if(inRange && Type == MonsterType.Archer && !targeting) //Archer fires his shot, using targeting to space shots out.
+            if(inRange && Type == MonsterType.Archer && !winding) //Archer fires his shot, using targeting to space shots out.
             {
-                targeting = true;
+                winding = true;
                 transform.up = _Target.position - transform.position; //face player with y axis
+                transform.Translate(Vector2.up * Speed * Time.deltaTime);
                 int _i = 0;
                 for (int _a = 0; _a < GameManager.GAME.RockPool.Count; _a++) if (!GameManager.GAME.RockPool[_a].GetComponent<I_am_a_Rock>().flight) _i = _a;
                 GameManager.GAME.RockPool[_i].transform.position = this.transform.position;
                 GameManager.GAME.RockPool[_i].transform.rotation = this.transform.rotation;
                 GameManager.GAME.RockPool[_i].GetComponent<I_am_a_Rock>().Throw_Rock();
-                StartCoroutine(DelayBeforeThrowingAnotherRock());
-                transform.Translate(Vector2.down * Speed * 2 *Time.deltaTime); //move backwards along y axis   
+                StartCoroutine(DelayBeforeThrowingAnotherRock());   
+            }
+            if(inRange && Type == MonsterType.Archer && winding)
+            {
+                transform.up = _Target.position - transform.position; //face player with y axis
+                transform.Translate(Vector2.right * Speed * 2 * Random.Range(-1, 1) * Time.deltaTime); //move sideways
+                transform.Translate(Vector2.down * Speed * 2 * Time.deltaTime); //move backwards
             }
         }
     }
@@ -108,8 +114,8 @@ public class Enemy_Logic_Controller : MonoBehaviour
     }
     IEnumerator DelayBeforeThrowingAnotherRock()
     {
-        yield return new WaitForSeconds(1f);
-        targeting = false;
+        yield return new WaitForSeconds(2.5f);
+        winding = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -138,10 +144,21 @@ public class Enemy_Logic_Controller : MonoBehaviour
             dir = -dir.normalized;
             GetComponent<Rigidbody2D>().AddForce(dir * 300, ForceMode2D.Impulse);
             Health = Health - GameManager.GAME.ArrowDamage;
-            //collision.gameObject.GetComponent<Arrow_Controller>().StopArrow();
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) { inRange = true; }
-    private void OnTriggerExit2D(Collider2D collision) { inRange = false; targeting = false; charging = false; }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetComponent<Collider2D>().gameObject.name == "Range")
+        {
+            inRange = true;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision) 
+    {
+        if (collision.GetComponent<Collider2D>().gameObject.name == "Range")
+        {
+            inRange = false; targeting = false; charging = false;
+        }
+    }
 }

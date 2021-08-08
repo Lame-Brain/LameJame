@@ -7,14 +7,20 @@ public class HeroController : MonoBehaviour
     public enum Direction { Up, UpLeft, Left, DownLeft, Down, DownRight, Right, UpRight }
     public enum WeaponSelectionOptions { Sword, Bow, Bomb }
     public bool CanMove;
+    public float Health, Armor;
     public float Speed;
     public Animator MySprite;
     public Direction Facing;
     public float SwordDamage, ArrowDamage, BombDamage;
+    public float InvincibleTime;
 
     public float ReloadTime;
     [HideInInspector]     public WeaponSelectionOptions selectedWeapon;
     public GameObject SwordBox, ArrowBox, BombBox;
+
+    float InvincibleCountdown = 0;
+    float RateOfCountdownDecay = .1f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +32,20 @@ public class HeroController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (CanMove)
+        if (InvincibleCountdown > 0)
+        {
+            InvincibleCountdown = InvincibleCountdown - RateOfCountdownDecay;
+            MySprite.SetBool("Flash", true);
+
+            if (InvincibleCountdown <= 0) { MySprite.SetBool("Flash", false); InvincibleCountdown = 0; }
+        }
+
+        if (InvincibleCountdown == 0 && Health <= 0)
+        {
+            //GAME OVER
+        }
+
+            if (CanMove)
         {
             if (Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
             {
@@ -130,5 +149,18 @@ public class HeroController : MonoBehaviour
         if (selectedWeapon == WeaponSelectionOptions.Sword) this.SwordBox.SetActive(true);
         if (selectedWeapon == WeaponSelectionOptions.Bow) this.ArrowBox.SetActive(true);
         if (selectedWeapon == WeaponSelectionOptions.Bomb) this.BombBox.SetActive(true);
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.tag == "Rock")
+        {
+            collision.collider.gameObject.GetComponent<I_am_a_Rock>().flight = false;
+            collision.collider.gameObject.GetComponent<I_am_a_Rock>().Stop_Rock();
+            InvincibleCountdown = InvincibleTime;
+            Vector3 dir = collision.collider.transform.position - transform.position;
+            dir = -dir.normalized;
+            GetComponent<Rigidbody2D>().AddForce(dir * 100, ForceMode2D.Impulse);
+            Health = Health - GameManager.GAME.RockDamge;
+        }
     }
 }

@@ -10,5 +10,14 @@ public class I_am_a_Wall : MonoBehaviour
         {
             collision.gameObject.GetComponent<Arrow_Controller>().StopArrow();
         }
+
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetComponent<Collider2D>().gameObject.name == "Rock")
+        {
+            Debug.Log("TINK");
+        } 
     }
 }

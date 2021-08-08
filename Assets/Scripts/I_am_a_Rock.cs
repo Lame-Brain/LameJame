@@ -5,7 +5,6 @@ using UnityEngine;
 public class I_am_a_Rock : MonoBehaviour
 {
     public bool flight;
-     int _damage = 4;
      float _speed = 5;
 
     // Update is called once per frame
@@ -24,9 +23,13 @@ public class I_am_a_Rock : MonoBehaviour
 
     public void Stop_Rock()
     {
-        gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-        gameObject.GetComponent<Rigidbody2D>().angularVelocity = 0;
         flight = false;
         gameObject.transform.position = GameManager.POOL.transform.position;
+    }
+
+    IEnumerator FlightTime()
+    {
+        yield return new WaitForSeconds(2.5f);
+        Stop_Rock();
     }
 }

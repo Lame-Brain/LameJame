@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager GAME;
     public static GameObject POOL;
 
-    public float SwordDamage, ArrowDamage, BombDamage;
+    public float SwordDamage, ArrowDamage, BombDamage, RockDamge;
     public GameObject arrow_prefab, bomb_prefab, rock_prefab;
     public GameObject[] floor, wall;
     public List<GameObject> ArrowPool = new List<GameObject>();

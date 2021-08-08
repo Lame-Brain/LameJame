@@ -247,6 +247,7 @@ MonoBehaviour:
   SwordDamage: 1
   ArrowDamage: 3
   BombDamage: 6
+  RockDamge: 2
   arrow_prefab: {fileID: 4940909766909536795, guid: 742ed5303728b194cbecea0947334e93, type: 3}
   bomb_prefab: {fileID: 6676420739825945937, guid: 4fb01b7447240bc419ad3c85fbd3966a, type: 3}
   rock_prefab: {fileID: 2829606749450937386, guid: eb72256242645fa4d99b07e509945830, type: 3}
@@ -551,42 +552,6 @@ PrefabInstance:
       propertyPath: MySprite
       value: 
       objectReference: {fileID: 225868557}
-    - target: {fileID: 1473188045, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
-      propertyPath: BombDamage
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1473188045, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
-      propertyPath: ArrowDamage
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1473188045, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
-      propertyPath: SwordDamage
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 761573642257234880, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
-      propertyPath: m_SortingOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1269049918188926126, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
-      propertyPath: m_SortingOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2591861734369994449, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
-      propertyPath: m_Mass
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2591861734369994449, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
-      propertyPath: m_LinearDrag
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2591861734369994449, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
-      propertyPath: m_AngularDrag
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3433479943650015804, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
-      propertyPath: m_SortingOrder
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 3945365533955435820, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -755,7 +720,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6506511903567350318, guid: 39cf9cf85e9ae47469a0858e2973bfce, type: 3}
       propertyPath: Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6506511903567350318, guid: 39cf9cf85e9ae47469a0858e2973bfce, type: 3}
       propertyPath: Speed
