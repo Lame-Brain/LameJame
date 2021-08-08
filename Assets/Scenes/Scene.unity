@@ -556,6 +556,30 @@ PrefabInstance:
       propertyPath: InvincibleTime
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 427826234231682296, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
+      propertyPath: m_Size.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 427826234231682296, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
+      propertyPath: m_Size.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 427826234231682296, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
+      propertyPath: m_Offset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 427826234231682296, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
+      propertyPath: m_Offset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 436904486063180311, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
+      propertyPath: m_Size.y
+      value: 0.34023905
+      objectReference: {fileID: 0}
+    - target: {fileID: 436904486063180311, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.04622671
+      objectReference: {fileID: 0}
     - target: {fileID: 3945365533955435820, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
       propertyPath: m_RootOrder
       value: 2

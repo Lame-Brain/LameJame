@@ -18,7 +18,7 @@ public class HeroController : MonoBehaviour
     [HideInInspector]     public WeaponSelectionOptions selectedWeapon;
     public GameObject SwordBox, ArrowBox, BombBox;
 
-    float InvincibleCountdown = 0;
+    public float InvincibleCountdown = 0;
     float RateOfCountdownDecay = .1f;
 
 
@@ -154,37 +154,37 @@ public class HeroController : MonoBehaviour
     {
         if (collision.collider.gameObject.tag == "Rock")
         {
+            if (InvincibleCountdown == 0) Health = Health - GameManager.GAME.RockDamge;
             collision.collider.gameObject.GetComponent<I_am_a_Rock>().flight = false;
             collision.collider.gameObject.GetComponent<I_am_a_Rock>().Stop_Rock();
             InvincibleCountdown = InvincibleTime;
             Vector3 dir = collision.collider.transform.position - transform.position;
             dir = -dir.normalized;
             GetComponent<Rigidbody2D>().AddForce(dir * 100, ForceMode2D.Impulse);
-            Health = Health - GameManager.GAME.RockDamge;
         }
         if(collision.collider.gameObject.tag == "Enemy")
         {
+            if (InvincibleCountdown == 0) Health = Health - 2;
             InvincibleCountdown = InvincibleTime;
             Vector3 dir = collision.collider.transform.position - transform.position;
             dir = -dir.normalized;
-            GetComponent<Rigidbody2D>().AddForce(dir * 100, ForceMode2D.Impulse);
-            Health = Health - 5;
+            GetComponent<Rigidbody2D>().AddForce(dir * 200, ForceMode2D.Impulse);
         }
         if(collision.collider.gameObject.tag == "Medium Enemy")
         {
+            if (InvincibleCountdown == 0) Health = Health - 4;
             InvincibleCountdown = InvincibleTime;
             Vector3 dir = collision.collider.transform.position - transform.position;
             dir = -dir.normalized;
-            GetComponent<Rigidbody2D>().AddForce(dir * 100, ForceMode2D.Impulse);
-            Health = Health - 10;
+            GetComponent<Rigidbody2D>().AddForce(dir * 800, ForceMode2D.Impulse);
         }
         if(collision.collider.gameObject.tag == "Heavy Enemy")
         {
+            if (InvincibleCountdown == 0) Health = Health - 8;
             InvincibleCountdown = InvincibleTime;
             Vector3 dir = collision.collider.transform.position - transform.position;
             dir = -dir.normalized;
-            GetComponent<Rigidbody2D>().AddForce(dir * 100, ForceMode2D.Impulse);
-            Health = Health - 15;
+            GetComponent<Rigidbody2D>().AddForce(dir * 1000, ForceMode2D.Impulse);
         }
     }
 }
