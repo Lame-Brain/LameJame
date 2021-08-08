@@ -215,6 +215,32 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 3593822114589634227, guid: d7fa5b55252b79d46859ac3661681a04, type: 3}
   m_PrefabInstance: {fileID: 3593822114412008889}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &308879361 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6444827525778074942, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
+  m_PrefabInstance: {fileID: 3945365534881922529}
+  m_PrefabAsset: {fileID: 0}
+--- !u!50 &308879365
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308879361}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &404748568
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,7 +580,7 @@ PrefabInstance:
       objectReference: {fileID: 225868557}
     - target: {fileID: 1473188045, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
       propertyPath: InvincibleTime
-      value: 2
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 427826234231682296, guid: 6869a781ad2c8394d846a62b7a01234c, type: 3}
       propertyPath: m_Size.x
